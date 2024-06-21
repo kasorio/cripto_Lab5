@@ -1,0 +1,42 @@
+version: '3'
+services:
+  S1:
+    build:
+      context: .
+      dockerfile: c4
+    ports:
+      - "2222:22"
+    networks:
+      - internal_network
+  
+  C1:
+    build:
+      context: .
+      dockerfile: c1
+    stdin_open: true
+    tty: true
+    networks:
+      - internal_network
+
+  C2:
+    build:
+      context: .
+      dockerfile: c2
+    stdin_open: true
+    tty: true
+    networks:
+      - internal_network
+
+
+  C3:
+    build:
+      context: .
+      dockerfile: c3
+    stdin_open: true
+    tty: true
+    networks:
+      - internal_network
+
+networks:
+  internal_network:
+    driver: bridge

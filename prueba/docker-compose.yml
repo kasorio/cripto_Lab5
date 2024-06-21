@@ -1,0 +1,35 @@
+version: '3'
+services:
+  C1:
+    image: ubuntu:16.10
+    container_name: C1
+    command: tail -f /dev/null
+    networks:
+      - sshnet
+  C2:
+    image: ubuntu:18.10
+    container_name: C2
+    command: tail -f /dev/null
+    networks:
+      - sshnet
+
+  C3:
+    image: ubuntu:20.10
+    container_name: C3
+    command: tail -f /dev/null
+    networks:
+      - sshnet
+
+  s1:
+    image: ubuntu:22.10
+    container_name: s1
+    ports:
+      - "2222:22"
+    networks:
+      - sshnet
+    command: bash -c "apt-get update && apt-get install -y openssh-server && mkdir /var/run/sshd && echo 'root:prueba' | chpasswd && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && /usr/sbin/sshd -D"
+
+
+networks:
+  sshnet:
+    driver: bridge
