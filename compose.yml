@@ -1,0 +1,35 @@
+version: '3'
+services:
+  C1:
+    image: ubuntu:16.10
+    container_name: C1
+    command: /bin/bash -c "sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list && apt-get update && apt-get install -y openssh-client && tail -f /dev/null"
+    networks:
+      - sshnet
+
+  C2:
+    image: ubuntu:18.10
+    container_name: C2
+    command: /bin/bash -c "sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list && apt-get update && apt-get install -y openssh-client && tail -f /dev/null"
+    networks:
+      - sshnet
+
+  C3:
+    image: ubuntu:20.10
+    container_name: C3
+    command: /bin/bash -c "sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list && apt-get update && apt-get install -y openssh-client && tail -f /dev/null"
+    networks:
+      - sshnet
+
+  S1:
+    image: ubuntu:22.10
+    container_name: S1
+    command: /bin/bash -c "sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list && apt-get update && apt-get install -y openssh-server && echo 'root:root' | chpasswd && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && service ssh start && adduser --disabled-password --gecos '' prueba && echo 'prueba:prueba' | chpasswd && service ssh restart && tail -f /dev/null"
+    ports:
+      - "2222:22"
+    networks:
+      - sshnet
+
+networks:
+  sshnet:
+    driver: bridge
